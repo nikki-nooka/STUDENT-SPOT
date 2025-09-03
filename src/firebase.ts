@@ -2,15 +2,17 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
+// Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAV99_NlhCrPYIV8nkFr0N23qlfIBTH10A",
-  authDomain: "studentspot-1b841.firebaseapp.com",
-  projectId: "studentspot-1b841",
-  storageBucket: "studentspot-1b841.firebasestorage.app",
-  messagingSenderId: "341218548796",
-  appId: "1:341218548796:web:1fc35fd4f6971d048cb739"
+  apiKey: "AIzaSyBjqem-rsvP1SYUTOFX4c8niItZmlaySiI",
+  authDomain: "the-student-spot-app.firebaseapp.com",
+  projectId: "the-student-spot-app",
+  storageBucket: "the-student-spot-app.firebasestorage.app",
+  messagingSenderId: "227603916953",
+  appId: "1:227603916953:web:809dfb8c3b5e7cc5df7008"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();

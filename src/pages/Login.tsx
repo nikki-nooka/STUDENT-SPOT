@@ -13,9 +13,9 @@ const Login = () => {
     setLoading(true);
     try {
       await signInWithPopup(auth, googleProvider);
-      navigate("/Home");
+      navigate("/dashboard");
     } catch (err: any) {
-      setError("Login failed. Please try again.");
+      setError(err.message);
       console.error("Google Sign-In Error:", err?.message);
     } finally {
       setLoading(false);
