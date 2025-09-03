@@ -1,14 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { Link, NavLink } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Menu, X, LogOut } from 'lucide-react';
 import Logo from '../shared/Logo';
+import { useAuth } from '../../context/AuthContext';
 
 const Header: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);
+
+  const handleLogout = async () => {
+    closeMenu();
+    await logout();
+    navigate('/login');
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -19,7 +28,11 @@ const Header: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = isOpen ? 'hidden' : 'auto';
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
   }, [isOpen]);
 
   const navItems = [
@@ -58,12 +71,26 @@ const Header: React.FC = () => {
             </NavLink>
           ))}
 
-          <Link
-            to="/login"
-            className="bg-gradient-to-r from-orange-400 to-red-500 text-white px-4 py-2 rounded-full text-sm shadow hover:opacity-90 transition"
-          >
-            Login
-          </Link>
+          {user ? (
+            <>
+              <Link
+                to="/dashboard"
+                className="bg-gradient-to-r from-orange-400 to-red-500 text-white px-4 py-2 rounded-full text-sm font-medium shadow hover:opacity-90 transition-opacity"
+              >
+                Dashboard
+              </Link>
+              <button onClick={handleLogout} className="text-gray-700 hover:text-orange-600 transition-colors duration-300" aria-label="Logout">
+                <LogOut size={22} />
+              </button>
+            </>
+          ) : (
+            <Link
+              to="/login"
+              className="bg-gradient-to-r from-orange-400 to-red-500 text-white px-5 py-2 rounded-full text-sm font-medium shadow hover:opacity-90 transition-opacity"
+            >
+              Login
+            </Link>
+          )}
         </nav>
 
         {/* Mobile Menu Button */}
@@ -82,7 +109,7 @@ const Header: React.FC = () => {
               <NavLink
                 key={item.path}
                 to={item.path}
-                className={({ isActive }) => `text-xl ${isActive ? activeClass : normalClass}`}
+                className={({ isActive }) => `text-2xl ${isActive ? activeClass : normalClass}`}
                 onClick={closeMenu}
                 end={item.path === '/'}
               >
@@ -90,13 +117,31 @@ const Header: React.FC = () => {
               </NavLink>
             ))}
 
-            <Link
-              to="/login"
-              onClick={closeMenu}
-              className="bg-gradient-to-r from-orange-400 to-red-500 text-white px-6 py-2 rounded-full text-lg shadow hover:opacity-90 transition"
-            >
-              Login
-            </Link>
+            <div className="mt-8 pt-8 border-t border-gray-200 w-full flex flex-col items-center space-y-6">
+              {user ? (
+                <>
+                  <Link
+                    to="/dashboard"
+                    onClick={closeMenu}
+                    className="bg-gradient-to-r from-orange-400 to-red-500 text-white px-8 py-3 rounded-full text-lg shadow-md hover:opacity-90 transition-opacity w-full max-w-xs text-center"
+                  >
+                    Dashboard
+                  </Link>
+                  <button onClick={handleLogout} className="flex items-center text-lg text-gray-700 hover:text-orange-600 transition-colors duration-300">
+                    <LogOut className="mr-2" size={22} />
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <Link
+                  to="/login"
+                  onClick={closeMenu}
+                  className="bg-gradient-to-r from-orange-400 to-red-500 text-white px-8 py-3 rounded-full text-lg shadow-md hover:opacity-90 transition-opacity w-full max-w-xs text-center"
+                >
+                  Login
+                </Link>
+              )}
+            </div>
           </div>
         </div>
       </div>
